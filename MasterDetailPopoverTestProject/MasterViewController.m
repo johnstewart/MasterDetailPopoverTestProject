@@ -8,6 +8,7 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "MyPopoverViewController.h"
 
 @interface MasterViewController ()
 
@@ -21,8 +22,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+//    self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
@@ -48,6 +49,27 @@
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+#pragma mark - Popover Delegate
+
+- (void) prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
+    NSLog(@"MVC prepareForPopoverPresentation");
+}
+
+- (void) popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    NSLog(@"MVC popoverPresentationControllerDidDismissPopover");
+
+}
+
+- (BOOL) popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    NSLog(@"MVC popoverPresentationControllerShouldDismissPopover");
+    return TRUE;
+
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
+    return UIModalPresentationNone;
+}
+
 
 #pragma mark - Segues
 
@@ -59,8 +81,12 @@
         [controller setDetailItem:object];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
+    } else if ([[segue identifier] isEqualToString:@"thePopover"]) {
+        NSLog(@"MVC prepareForSegue thePopover");
+        MyPopoverViewController *myPopoverController = segue.destinationViewController;
+        myPopoverController.popoverPresentationController.delegate = self;
     }
-}
+ }
 
 
 #pragma mark - Table View
